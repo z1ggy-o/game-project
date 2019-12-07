@@ -1,0 +1,36 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path.s3tc="res://.import/bear_specular.png-1c870f01f091ad81e10c9b15b9205a19.s3tc.stex"
+path.etc2="res://.import/bear_specular.png-1c870f01f091ad81e10c9b15b9205a19.etc2.stex"
+metadata={
+"imported_formats": [ "s3tc", "etc2" ],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://Characters/Enemy/warrok/textures/bear_specular.png"
+dest_files=[ "res://.import/bear_specular.png-1c870f01f091ad81e10c9b15b9205a19.s3tc.stex", "res://.import/bear_specular.png-1c870f01f091ad81e10c9b15b9205a19.etc2.stex" ]
+
+[params]
+
+compress/mode=2
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=true
+flags/filter=true
+flags/mipmaps=true
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+stream=false
+size_limit=0
+detect_3d=false
+svg/scale=1.0

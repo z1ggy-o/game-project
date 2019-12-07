@@ -212,3 +212,6 @@ func set_health(value):
 			kill()
 			emit_signal("killed")
 			
+# Empty method for Player determination
+func to_next_scene():
+	pass

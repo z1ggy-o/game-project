@@ -7,55 +7,8 @@ const FAILED_MENU_PATH = "res://FailedMenu.tscn"
 # The path to the title screen scene
 const MAIN_MENU_PATH = "res://Main_Menu.tscn"
 
-# -------------------
-# zgy: Power Up
-var HP_LEVEL = 0
-var ATTACK_LEVEL = 0
-var SPEED_LEVEL = 0
-var SOULS = 0
-var POWER_UP_COST = 5
-
-func read_power():
-	var file = File.new()
-	if not file.file_exists("user://powers.txt"):
-		return
-	
-	file.open("user://powers.txt", File.READ)
-	while not file.eof_reached():
-		var current_line = file.get_line()
-		var power = current_line.split(":", false)
-		
-		if power.size() == 0:
-			break
-			
-		var name = power[0]
-		var value = int(power[1])
-		
-		if name == "hp":
-			HP_LEVEL = value
-		elif name == "attack":
-			ATTACK_LEVEL = value
-		elif name == "speed":
-			SPEED_LEVEL = value
-		elif name == "souls":
-			SOULS = value
-		elif name == "cost":
-			POWER_UP_COST = value
-
-	file.close()
-	
-func write_power():
-	var file = File.new()
-	file.open("user://powers.txt", File.WRITE)
-	
-	file.store_string("souls:" + str(SOULS) +"\n")
-	file.store_string("cost:" + str(POWER_UP_COST) +"\n")
-	file.store_string("hp:" + str(HP_LEVEL) +"\n")
-	file.store_string("attack:" + str(ATTACK_LEVEL) +"\n")
-	file.store_string("speed:" + str(SPEED_LEVEL) +"\n")
-	
-	file.close()
-#------------------------
+# Current level for level transition
+var CURRENT_LEVEL = 1
 
 # ------------------------------------
 # All of the GUI/UI related variables
@@ -108,12 +61,61 @@ func _ready():
 	# Randomize the random number generator, so we get random values
 	randomize()
 	read_power()  # zgy: Read power up from file
-	
+	CURRENT_LEVEL = 1 # for level scene choosing
 	# Make a new canvas layer.
 	# This is so our popup always appears on top of everything else
 	canvas_layer = CanvasLayer.new()
 	add_child(canvas_layer)
 
+# -------------------
+# zgy: Power Up
+var HP_LEVEL = 0
+var ATTACK_LEVEL = 0
+var SPEED_LEVEL = 0
+var SOULS = 0
+var POWER_UP_COST = 5
+
+func read_power():
+	var file = File.new()
+	if not file.file_exists("user://powers.txt"):
+		return
+	
+	file.open("user://powers.txt", File.READ)
+	while not file.eof_reached():
+		var current_line = file.get_line()
+		var power = current_line.split(":", false)
+		
+		if power.size() == 0:
+			break
+			
+		var name = power[0]
+		var value = int(power[1])
+		
+		if name == "hp":
+			HP_LEVEL = value
+		elif name == "attack":
+			ATTACK_LEVEL = value
+		elif name == "speed":
+			SPEED_LEVEL = value
+		elif name == "souls":
+			SOULS = value
+		elif name == "cost":
+			POWER_UP_COST = value
+
+	file.close()
+	
+func write_power():
+	var file = File.new()
+	file.open("user://powers.txt", File.WRITE)
+	
+	file.store_string("souls:" + str(SOULS) +"\n")
+	file.store_string("cost:" + str(POWER_UP_COST) +"\n")
+	file.store_string("hp:" + str(HP_LEVEL) +"\n")
+	file.store_string("attack:" + str(ATTACK_LEVEL) +"\n")
+	file.store_string("speed:" + str(SPEED_LEVEL) +"\n")
+	
+	file.close()
+#------------------------
 
 
 func get_respawn_position():

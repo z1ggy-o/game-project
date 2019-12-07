@@ -215,3 +215,8 @@ func set_health(value):
 # Empty method for Player determination
 func to_next_scene():
 	pass
+
+func fetch_skill():
+	pass
+
+

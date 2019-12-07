@@ -117,7 +117,7 @@ func write_power():
 	file.close()
 #------------------------
 
-
+"""
 func get_respawn_position():
 	# If we do not have any respawn points, return origin
 	if respawn_points == null:
@@ -126,7 +126,7 @@ func get_respawn_position():
 	else:
 		var respawn_point = rand_range(0, respawn_points.size()-1)
 		return respawn_points[respawn_point].global_transform.origin
-
+"""
 
 func load_new_scene(new_scene_path):
 	# Set respawn points to null so when/if we get to a level with no respawn points,
@@ -215,4 +215,34 @@ func play_sound(sound_name, loop_sound=false, sound_position=null):
 	else:
 		print ("ERROR: cannot play sound that does not exist in audio_clips!")
 
+# -------------------
+# skill popup
+const SKILL_POPUP_SCENE = preload("res://Skill_Popup.tscn")
+var skill_popup = null
+	
+func skill_popup():
+	if skill_popup == null:
+		# Make a new popup scene
+		skill_popup = SKILL_POPUP_SCENE.instance()
+		
+		# Connect the signals
+		skill_popup.get_ok().connect("pressed", self, "get_skill")
+		skill_popup.get_cancel().connect("pressed", self, "skill_popup_closed")
+		
+		# Add it as a child, and make it pop up in the center of the screen
+		get_node("/root/Globals").canvas_layer.add_child(skill_popup)
+			
+		skill_popup.popup_centered()
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
+func skill_popup_closed():
+	
+	# If we have a popup, destoy it
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if skill_popup != null:
+		skill_popup.queue_free()
+		skill_popup = null
 
+func get_skill():
+	print("OK, get this skill")
+	skill_popup_closed()

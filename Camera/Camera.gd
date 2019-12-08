@@ -11,4 +11,5 @@ var player: Player
 
 func _ready() -> void:
 	player = get_tree().root.find_node("Player", true, false)
+	#global_transform.origin.y = player.global_transform.origin.y + 2
 	assert(player)

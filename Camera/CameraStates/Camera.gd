@@ -30,6 +30,8 @@ func physics_process(delta: float) -> void:
 	#pin camera to player position relative to old position
 	var current_transform: Transform = owner.global_transform
 	var current_position: = current_transform.origin
+	initial_anchor_position.x = -initial_anchor_position.x
+	initial_anchor_position.z = -initial_anchor_position.z
 	var intended_position: Vector3 = owner.player.global_transform.origin + initial_anchor_position
 	current_transform.origin = intended_position
 	owner.global_transform = current_transform

@@ -75,6 +75,19 @@ var SPEED_LEVEL = 0
 var SOULS = 0
 var POWER_UP_COST = 5
 
+var factor = 1
+
+var ABIL_POWER = 0
+var ABIL_HP = 0
+var ABIL_SHOOT = 0
+var HEALTH_UP = 0
+
+func reset_abil():
+	ABIL_POWER = 0
+	ABIL_HP = 0
+	ABIL_SHOOT = 0
+	HEALTH_UP = 0
+
 func read_power():
 	var file = File.new()
 	if not file.file_exists("user://powers.txt"):
@@ -246,3 +259,6 @@ func skill_popup_closed():
 func get_skill():
 	print("OK, get this skill")
 	skill_popup_closed()
+
+func updateSoul(soul):
+	SOULS = SOULS + soul

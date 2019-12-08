@@ -11,8 +11,8 @@ const V_LOOK_SENS = 0.2
 
 
 # MOVEMENT SPEED
-const MAX_SPEED = 8
-const MAX_SPRINT_SPEED = 12
+const SPEED = 8
+const SPRINT_SPEED = 12
 const JUMP_SPEED = 15
 const MAX_FALL_SPEED = 30
 const GRAVITY = -38.8
@@ -30,14 +30,19 @@ var is_shoot
 var is_attack
 var is_hit
 
+var attack_finish = true
+
 # etc
 const MAX_SLOPE_ANGLE = 40
 onready var invulnerability_timer = $InvulnerableTimer
 
 # STATUS
-export var MAX_HEALTH = 100
-
-onready var HEALTH = MAX_HEALTH setget set_health
+var MIN_HEALTH = 100
+var DAMAGE = 10
+var MIN_DAMAGE = 100
+var MAX_HEALTH = 100
+var HEALTH = 100 setget set_health
+var SHOOT = 0
 
 
 #onready var cam = $CamBase
@@ -45,6 +50,7 @@ onready var animation_manager = $Graphics/AnimationPlayer
 
 var camera: Camera
 
+# on ready
 func _ready():
 	camera = get_tree().root.find_node("Camera", true, false)
 	assert(camera)
@@ -53,8 +59,27 @@ func _ready():
 	emit_signal("health_updated", MAX_HEALTH)
 	
 	add_to_group("Player")
+	$Area/CollisionShape.disabled = true
+	status_update()
 	
-
+# when dead
+func kill():
+	play_anim("Death")
+	get_node("/root/Globals").reset_abil()
+	get_tree().change_scene("res://FailedMenu.tscn")
+	pass
+	
+# get status from Global
+func status_update():
+	DAMAGE = MIN_DAMAGE + 5 * get_node("/root/Globals").ATTACK_LEVEL + get_node("/root/Globals").ABIL_POWER
+	MAX_HEALTH = MIN_HEALTH + 15 * get_node("/root/Globals").HP_LEVEL + get_node("/root/Globals").ABIL_HP
+	#HEALTH = set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
+	get_node("/root/Globals").HEALTH_UP = 0
+	SHOOT = get_node("/root/Globals").ABIL_SHOOT
+	get_node("BulletSpawn").set_damage(SHOOT)
+	
+	
+	
 func _input(event):
 	pass
 	
@@ -68,13 +93,15 @@ static func _short_angle_dist(from, to):
 
 func _physics_process(delta):
 	
+	status_update()
 	# if dead
 	if HEALTH <= 0:
 		kill()
 		return
 		
 	var anim = process_input(delta)
-	process_movement(delta)
+	if !is_attack:
+		process_movement(delta)
 	process_animation(delta, anim)
 	
 	
@@ -103,6 +130,11 @@ func process_input(delta):
     	is_sprinting = true
 	else:
     	is_sprinting = false
+	
+	
+	if Input.is_action_pressed("attack") and attack_finish:
+		is_attack = true
+
 		
 	input_movement_vector = input_movement_vector.normalized()
 	
@@ -126,14 +158,19 @@ func process_input(delta):
 	if is_jumped:
 		return "Jump"
 	elif is_on_floor():
+		if is_attack:
+			if attack_finish:
+				$Area/CollisionShape.disabled = false
+				attack_finish = false
+				return "Attack"
+			is_moving = false
+			return "Attack"
 		if dir.x == 0 and dir.z == 0:
 			return "Idle-loop"
 		if is_sprinting:
 			return "Run-loop"
 		else:
 			return "Walk"
-		if is_attack:
-			return "Attack"
 		if is_shoot:
 			return "Gunplay"
 			
@@ -152,9 +189,9 @@ func process_movement(delta):
 	var target = dir
 	
 	if is_sprinting:
-    	target *= MAX_SPRINT_SPEED
+    	target *= SPRINT_SPEED
 	else:
-    	target *= MAX_SPEED
+    	target *= SPEED
 
 	var accel
 	if dir.dot(hvel) > 0:
@@ -172,14 +209,15 @@ func process_animation(delta, anim):
 	if is_moving:
 		var angle = atan2(dir.x, dir.z)
 		
-		var char_rot = $Graphics.get_rotation()
+		var char_rot = get_rotation()
 
+		
 		if abs(fmod(char_rot.y - angle, PI)) > 0.1 :
 			char_rot.y = lerp_angle(char_rot.y, angle, 0.2)
 		else :
 			char_rot.y = angle
 		
-		$Graphics.set_rotation(char_rot)
+		set_rotation(char_rot)
 
 	
 	if anim:
@@ -195,13 +233,8 @@ func take_damage(amount):
 	if invulnerability_timer.is_stopped():
 		invulnerability_timer.start()
 		set_health(HEALTH - amount)
-		
 
 
-func kill():
-	play_anim("Death")
-	
-	pass
 	
 func set_health(value):
 	var prev_health = HEALTH
@@ -220,3 +253,17 @@ func fetch_skill():
 	pass
 
 
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "Attack":
+		is_attack = false
+		attack_finish = true
+		$Area/CollisionShape.disabled = true
+
+
+
+
+func _on_Attack_timeout():
+	$Area/CollisionShape.disabled = false
+	 # Replace with function body.

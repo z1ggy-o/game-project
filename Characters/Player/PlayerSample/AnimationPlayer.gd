@@ -14,7 +14,7 @@ var states = {
 }
 
 var animation_speeds = {
-	"Attack" : 1,
+	"Attack" : 1.5,
 	"Death" : 1,
 	"Gunplay" : 1,
 	"Hit" : 1,

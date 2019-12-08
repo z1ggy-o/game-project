@@ -4,9 +4,9 @@ var states = {
 	"Attack":["Death", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
 	"Death":[],
 	"Gunplay":["Death", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
-	"Hit":["Death", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
+	"Hit":["Attack", "Death", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
 	"Idle-loop":["Attack", "Death", "Gunplay", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
-	"Jump":["Death", "Idle-loop", "Walk", "Run-loop"],
+	"Jump":["Attack", "Death", "Idle-loop", "Walk", "Run-loop"],
 	"Run-loop":["Attack", "Death", "Idle-loop", "Gunplay","Walk","Jump","Death"],
 	"Walk":["Attack", "Death", "Gunplay", "Hit", "Idle-loop", "Jump", "Run-loop"],
 	

@@ -42,7 +42,7 @@ var MIN_HEALTH = 100
 var DAMAGE = 10
 var MIN_DAMAGE = 50 #zgy
 var MAX_HEALTH = 100
-var HEALTH = 100 setget set_health
+onready var HEALTH = 100 setget set_health
 var SHOOT = 0
 
 
@@ -78,6 +78,8 @@ func first_status_update():
 	get_node("/root/Globals").HEALTH_UP = 0
 	SHOOT = get_node("/root/Globals").ABIL_SHOOT
 	get_node("BulletSpawn").set_damage(SHOOT + DAMAGE)
+	
+	emit_signal("Abilup", "update")
 
 func status_update():
 	var before_damage = DAMAGE
@@ -85,7 +87,7 @@ func status_update():
 	var before_shoot = SHOOT
 	DAMAGE = MIN_DAMAGE + 5 * get_node("/root/Globals").ATTACK_LEVEL + get_node("/root/Globals").ABIL_POWER
 	MAX_HEALTH = MIN_HEALTH + 15 * get_node("/root/Globals").HP_LEVEL + get_node("/root/Globals").ABIL_HP
-	#HEALTH = set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
+	set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
 	get_node("/root/Globals").HEALTH_UP = 0
 	SHOOT = get_node("/root/Globals").ABIL_SHOOT
 	get_node("BulletSpawn").set_damage(SHOOT + DAMAGE)

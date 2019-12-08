@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Characters/Player/PlayerSample/Player.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Player/PlayerSample/NoFace.dae" type="PackedScene" id=2]
 [ext_resource path="res://Characters/Player/PlayerSample/AnimationPlayer.gd" type="Script" id=3]
 [ext_resource path="res://Characters/Player/PlayerSample/Area.gd" type="Script" id=4]
 [ext_resource path="res://Characters/Player/PlayerSample/BulletSpawn.gd" type="Script" id=5]
-[ext_resource path="res://Skill_UHD.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.441458
@@ -52,8 +51,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05905e-007, 1.23001, 1.21141
 
 [node name="DeadDelay" type="Timer" parent="."]
 wait_time = 4.0
-
-[node name="Skill_UHD" parent="." instance=ExtResource( 6 )]
 [connection signal="animation_finished" from="Graphics/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="body_entered" from="Area" to="Area" method="_on_Area_body_entered"]
 [connection signal="timeout" from="timer_Attack" to="." method="_on_Attack_timeout"]

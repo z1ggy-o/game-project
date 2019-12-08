@@ -66,6 +66,8 @@ func _ready():
 func kill():
 	play_anim("Death")
 	get_node("/root/Globals").reset_abil()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	# need play dead animation
 	get_tree().change_scene("res://FailedMenu.tscn")
 	pass
 	

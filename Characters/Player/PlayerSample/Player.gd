@@ -65,9 +65,9 @@ func _ready():
 # when dead
 func kill():
 	play_anim("Death")
-	get_node("/root/Globals").reset_abil()
+	yield(get_tree().create_timer(4.0),"timeout")
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	# need play dead animation
+	get_node("/root/Globals").reset_abil()
 	get_tree().change_scene("res://FailedMenu.tscn")
 	pass
 	
@@ -177,7 +177,6 @@ func process_input(delta):
 		if is_shoot:
 			return "Gunplay"
 			
-
 	return null
 	
 func process_movement(delta):

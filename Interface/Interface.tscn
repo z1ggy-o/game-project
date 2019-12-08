@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Interface/Interface.gd" type="Script" id=1]
 [ext_resource path="res://Interface/Health.tscn" type="PackedScene" id=2]
 [ext_resource path="res://UI/Soul_Counter.tscn" type="PackedScene" id=3]
 [ext_resource path="res://UI/Abilup.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Skill_UHD.tscn" type="PackedScene" id=5]
 
 [node name="Interface" type="Control"]
 anchor_right = 0.5
@@ -29,4 +30,10 @@ margin_left = -495.217
 margin_top = 474.003
 margin_right = -455.217
 margin_bottom = 514.003
+
+[node name="Skill_UHD" parent="." instance=ExtResource( 5 )]
+margin_left = 509.419
+margin_top = 2.94037
+margin_right = 509.419
+margin_bottom = 2.94037
 [connection signal="health_changed" from="." to="Health" method="_on_Interface_health_changed"]

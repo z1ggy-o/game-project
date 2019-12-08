@@ -53,6 +53,8 @@ func _ready():
 	
 	add_to_group("Enemy")
 	
+	$HealthBar3D.update(MAX_HEALTH, MAX_HEALTH)
+	
 	get_node("BulletSpawn").set_damage(DAMAGE)
 		
 	
@@ -152,6 +154,7 @@ func take_damage(amount):
 func kill():
 	play_anim("Death")
 	dead = true
+	$HealthBar3D.visible = false
 	abilup()
 	get_node("/root/Globals").updateSoul(SOUL)
 	pass
@@ -166,6 +169,7 @@ func set_health(value):
 	var prev_health = HEALTH
 	HEALTH = clamp(value, 0 , MAX_HEALTH)
 	if HEALTH != prev_health:
+		$HealthBar3D.update(HEALTH, MAX_HEALTH)
 		#emit_signal("health_updated", HEALTH)
 		if HEALTH <= 0:
 			kill()

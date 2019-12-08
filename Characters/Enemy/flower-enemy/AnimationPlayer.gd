@@ -27,7 +27,7 @@ var callback_function = null
 func _ready():
 	set_animation("Idle-loop")
 	get_animation("Walk-loop").set_loop(true)
-	connect("animation_finished", self, "animation_ended")
+	#connect("animation_finished", self, "animation_ended")
 
 	
 func set_animation(animation_name):

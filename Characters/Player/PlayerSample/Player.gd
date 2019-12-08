@@ -39,7 +39,7 @@ onready var invulnerability_timer = $InvulnerableTimer
 # STATUS
 var MIN_HEALTH = 100
 var DAMAGE = 10
-var MIN_DAMAGE = 100
+var MIN_DAMAGE = 10
 var MAX_HEALTH = 100
 var HEALTH = 100 setget set_health
 var SHOOT = 0
@@ -134,6 +134,7 @@ func process_input(delta):
 	
 	if Input.is_action_pressed("attack") and attack_finish:
 		is_attack = true
+		get_node("/root/Globals").play_sound("punch")
 
 		
 	input_movement_vector = input_movement_vector.normalized()

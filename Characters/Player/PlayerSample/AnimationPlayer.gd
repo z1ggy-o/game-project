@@ -7,7 +7,7 @@ var states = {
 	"Hit":["Death", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
 	"Idle-loop":["Attack", "Death", "Gunplay", "Hit", "Idle-loop", "Jump", "Run-loop", "Walk"],
 	"Jump":["Death", "Idle-loop", "Walk", "Run-loop"],
-	"Run-loop":["Death", "Idle-loop", "Gunplay","Walk","Death"],
+	"Run-loop":["Attack", "Death", "Idle-loop", "Gunplay","Walk","Jump","Death"],
 	"Walk":["Attack", "Death", "Gunplay", "Hit", "Idle-loop", "Jump", "Run-loop"],
 	
 	"default":["Death", "Idle-loop", "Walk", "Run-loop"]
@@ -16,7 +16,7 @@ var states = {
 var animation_speeds = {
 	"Attack" : 1.5,
 	"Death" : 1,
-	"Gunplay" : 1,
+	"Gunplay" : 3,
 	"Hit" : 1,
 	"Idle-loop": 1,
 	"Jump" : 1,

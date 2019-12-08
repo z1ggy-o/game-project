@@ -1,7 +1,8 @@
 extends KinematicBody
 class_name Player
 
-signal health_updated(HEALTH)
+signal health_updated(HEALTH, MAXHEALTH)
+signal Abilup(abil)
 signal killed()
 
 
@@ -56,23 +57,32 @@ func _ready():
 	assert(camera)
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	emit_signal("health_updated", MAX_HEALTH)
+	emit_signal("health_updated", MAX_HEALTH, MAX_HEALTH)
 	
 	add_to_group("Player")
 	$Area/CollisionShape.disabled = true
-	status_update()
+	first_status_update()
 	
 # when dead
 func kill():
 	play_anim("Death")
-	yield(get_tree().create_timer(4.0),"timeout")
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	get_node("/root/Globals").reset_abil()
-	get_tree().change_scene("res://FailedMenu.tscn")
+	$DeadDelay.start()
 	pass
 	
 # get status from Global
+
+func first_status_update():
+	DAMAGE = MIN_DAMAGE + 5 * get_node("/root/Globals").ATTACK_LEVEL + get_node("/root/Globals").ABIL_POWER
+	MAX_HEALTH = MIN_HEALTH + 15 * get_node("/root/Globals").HP_LEVEL + get_node("/root/Globals").ABIL_HP
+	#HEALTH = set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
+	get_node("/root/Globals").HEALTH_UP = 0
+	SHOOT = get_node("/root/Globals").ABIL_SHOOT
+	get_node("BulletSpawn").set_damage(SHOOT + DAMAGE)
+
 func status_update():
+	var before_damage = DAMAGE
+	var before_max_health = MAX_HEALTH
+	var before_shoot = SHOOT
 	DAMAGE = MIN_DAMAGE + 5 * get_node("/root/Globals").ATTACK_LEVEL + get_node("/root/Globals").ABIL_POWER
 	MAX_HEALTH = MIN_HEALTH + 15 * get_node("/root/Globals").HP_LEVEL + get_node("/root/Globals").ABIL_HP
 	#HEALTH = set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
@@ -80,6 +90,13 @@ func status_update():
 	SHOOT = get_node("/root/Globals").ABIL_SHOOT
 	get_node("BulletSpawn").set_damage(SHOOT + DAMAGE)
 	
+	if before_damage < DAMAGE:
+		emit_signal("Abilup", "DAMAGE")
+	if before_max_health < MAX_HEALTH:
+		emit_signal("Abilup", "MAX_HEALTH")		
+	if before_shoot < SHOOT:
+		emit_signal("Abilup", "SHOOT")
+		
 	
 	
 func _input(event):
@@ -94,11 +111,12 @@ static func _short_angle_dist(from, to):
 	return fmod(2 * difference, max_angle) - difference
 
 func _physics_process(delta):
-	
+			
 	status_update()
 	# if dead
 	if HEALTH <= 0:
-		kill()
+		if $DeadDelay.is_stopped():
+			kill()
 		return
 		
 	var anim = process_input(delta)
@@ -113,6 +131,7 @@ func process_input(delta):
 	dir = Vector3()
 	
 	is_moving = false
+	
 	
 	var input_movement_vector = Vector3()
 	if Input.is_action_pressed("move_forwards"):
@@ -134,17 +153,26 @@ func process_input(delta):
     	is_sprinting = false
 	
 	
-	if Input.is_action_pressed("attack") and attack_finish:
+	if Input.is_action_pressed("attack") and attack_finish and is_on_floor():
 		is_attack = true
+		is_moving = true
 		get_node("/root/Globals").play_sound("punch")
 
+	
 		
+	
 	input_movement_vector = input_movement_vector.normalized()
+	
+	if Input.is_action_pressed("fire") and SHOOT > 0 and !is_attack:
+		is_moving = false
+		dir = Vector3(0,0,0)
+		return play_anim("Gunplay") #zgy
 	
 	var forwards: Vector3 = -camera.global_transform.basis.z * input_movement_vector.z
 	var right: Vector3 = camera.global_transform.basis.x * input_movement_vector.x
 	dir = (forwards + right).normalized()
-		
+
+	
 	var is_jumped = false
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump"):
@@ -165,17 +193,17 @@ func process_input(delta):
 			if attack_finish:
 				$Area/CollisionShape.disabled = false
 				attack_finish = false
-				return "Attack"
+				return "Idle-loop"
 			is_moving = false
 			return "Attack"
+		if is_shoot:
+			return "Gunplay"
 		if dir.x == 0 and dir.z == 0:
 			return "Idle-loop"
 		if is_sprinting:
 			return "Run-loop"
 		else:
 			return "Walk"
-		if is_shoot:
-			return "Gunplay"
 			
 	return null
 	
@@ -223,6 +251,7 @@ func process_animation(delta, anim):
 
 	
 	if anim:
+		print(anim)
 		play_anim(anim)
 	
 func play_anim(name):
@@ -242,7 +271,7 @@ func set_health(value):
 	var prev_health = HEALTH
 	HEALTH = clamp(value, 0 , MAX_HEALTH)
 	if HEALTH != prev_health:
-		emit_signal("health_updated", HEALTH)
+		emit_signal("health_updated", HEALTH, MAX_HEALTH)
 		if HEALTH <= 0:
 			kill()
 			emit_signal("killed")
@@ -262,6 +291,8 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		is_attack = false
 		attack_finish = true
 		$Area/CollisionShape.disabled = true
+	if anim_name == "Gunplay":
+		get_node("BulletSpawn").fire(global_transform.basis.z)
 
 
 
@@ -269,3 +300,9 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 func _on_Attack_timeout():
 	$Area/CollisionShape.disabled = false
 	 # Replace with function body.
+
+
+func _on_DeadDelay_timeout():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	get_node("/root/Globals").reset_abil()
+	get_tree().change_scene("res://FailedMenu.tscn")

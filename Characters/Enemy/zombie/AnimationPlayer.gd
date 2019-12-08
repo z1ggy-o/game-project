@@ -33,7 +33,7 @@ func _ready():
 	set_animation("Idle-loop")
 	get_animation("Walk-loop").set_loop(true)
 	get_animation("Attack-loop").set_loop(false)
-	connect("animation_finished", self, "animation_ended")
+	#connect("animation_finished", self, "animation_ended")
 	
 	t_firstDelay.set_wait_time(firstDelay)
 	t_attackFinish.set_wait_time(attackFinish)

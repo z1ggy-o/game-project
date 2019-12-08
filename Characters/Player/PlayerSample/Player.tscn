@@ -14,7 +14,6 @@ height = 0.833685
 extents = Vector3( 0.831082, 0.429063, 1.14402 )
 
 [node name="Player" type="KinematicBody"]
-editor/display_folded = true
 transform = Transform( -1, 0, 8.74228e-008, 0, 1, 0, -8.74228e-008, 0, -1, 0, 0, 0 )
 collision_layer = 32
 script = ExtResource( 1 )

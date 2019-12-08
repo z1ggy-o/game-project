@@ -158,9 +158,9 @@ func kill():
 	
 
 func abilup():
-	var rn = randi() % 100
-	if rn > 0:
-		get_node("/root/Globals").ABIL_SHOOT += 3
+	#var rn = randi() % 100
+	#if rn > 0:
+	get_node("/root/Globals").ABIL_SHOOT += 3
 
 func set_health(value):
 	var prev_health = HEALTH

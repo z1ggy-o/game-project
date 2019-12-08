@@ -6,6 +6,7 @@ var damage = 0
 
 func _input(event):
 	if event.is_action_pressed("fire") and get_parent().SHOOT > 0:
+		get_parent().play_anim("Gunplay") #zgy
 		fire(get_parent().global_transform.basis.z)
 
 func set_damage(d):

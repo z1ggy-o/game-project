@@ -39,7 +39,7 @@ onready var invulnerability_timer = $InvulnerableTimer
 # STATUS
 var MIN_HEALTH = 100
 var DAMAGE = 10
-var MIN_DAMAGE = 10
+var MIN_DAMAGE = 50 #zgy
 var MAX_HEALTH = 100
 var HEALTH = 100 setget set_health
 var SHOOT = 0
@@ -78,7 +78,7 @@ func status_update():
 	#HEALTH = set_health(HEALTH + get_node("/root/Globals").HEALTH_UP)
 	get_node("/root/Globals").HEALTH_UP = 0
 	SHOOT = get_node("/root/Globals").ABIL_SHOOT
-	get_node("BulletSpawn").set_damage(SHOOT)
+	get_node("BulletSpawn").set_damage(SHOOT + DAMAGE)
 	
 	
 	

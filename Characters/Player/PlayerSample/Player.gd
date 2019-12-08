@@ -251,7 +251,7 @@ func process_animation(delta, anim):
 
 	
 	if anim:
-		print(anim)
+		#print(anim)
 		play_anim(anim)
 	
 func play_anim(name):

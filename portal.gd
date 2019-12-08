@@ -12,7 +12,7 @@ func _ready():
 
 func to_next_scene(body):
 	# need check if enemies are all died
-	print("called to_next_scene")
+	#print("called to_next_scene")
 
 	if body.has_method("to_next_scene"):
 		print("to next scene") #

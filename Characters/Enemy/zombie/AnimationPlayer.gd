@@ -1,25 +1,30 @@
 extends AnimationPlayer
 
 var states = {
-	"Attack": ["Attack", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
+	"Attack-loop": ["Attack-loop", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
 	"Death": [],
-	"Hit": ["Attack", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
-	"Idle-loop":["Attack", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
-	"Walk-loop":["Idle-loop", "Death", "Run-loop"],
-	"Run-loop":["Idle-loop","Walk-loop","Death"],
+	"Hit": ["Attack-loop", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
+	"Idle-loop":["Attack-loop", "Death", "Idle-loop", "Run-loop", "Walk-loop"],
+	"Walk-loop":["Attack-loop", "Idle-loop", "Death", "Run-loop"],
 	"default":["Idle-loop", "Walk-loop", "Death", "Run-loop"],
 }
 
 var animation_speeds = {
-	"Attack": 1,
+	"Attack-loop": 1,
 	"Death": 1,
 	"Hit": 1,
 	"Idle-loop": 1,
-	"Run-loop": 1,
 	"Walk-loop": 2,
 	"default": 1
 }
 
+var t_firstDelay = get_parent().get_parent().get_node("timer_firstDelay")
+var firstDelay = 1.27
+
+var t_attackFinish = get_parent().get_parent().get_node("timer_attackFinish")
+var attackFinish = 1.38
+
+var t_closeAttack = get_parent().get_parent().get_node("timer_closeAttack")
 
 var current_state = null
 var callback_function = null
@@ -27,10 +32,13 @@ var callback_function = null
 func _ready():
 	set_animation("Idle-loop")
 	get_animation("Walk-loop").set_loop(true)
+	get_animation("Attack-loop").set_loop(false)
 	connect("animation_finished", self, "animation_ended")
-	$timer_firstDelay.set_wait_time(1.27)
-	$timer_attackFinish.set_wait_time(2.33)
-	#attack.
+	
+	t_firstDelay.set_wait_time(firstDelay)
+	t_attackFinish.set_wait_time(attackFinish)
+	t_closeAttack.stop()
+
 	
 func set_animation(animation_name):
 	if animation_name == current_state:
@@ -41,9 +49,9 @@ func set_animation(animation_name):
 			var possible_animations = states[current_state]
 			if animation_name in possible_animations:
 				current_state = animation_name
-				if animation_name == "Attack":
-					$timer_firstDelay.start()
-					$timer_attackFinish.start()
+				t_closeAttack.start()
+				t_firstDelay.start()
+				t_attackFinish.start()
 				play(animation_name, -1, animation_speeds[animation_name])
 				return true
 			else:
@@ -51,22 +59,9 @@ func set_animation(animation_name):
 				return false
 		else:
 			current_state = animation_name
+			t_closeAttack.start()
+			t_firstDelay.start()
+			t_attackFinish.start()
 			play(animation_name, -1, animation_speeds[animation_name])
 			return true
 	return false
-	
-func animation_ended(anim_name):
-	# UNARMED transitions
-	if current_state == "Idle-loop":
-		return
-	# KNIFE transitions
-	elif current_state == "Walk":
-		pass
-	elif current_state == "default":
-		pass
-
-func firstDelayFinished():
-	owner.firstDelayFinished()
-	
-func attackFinished():
-	owner.attackFinished()

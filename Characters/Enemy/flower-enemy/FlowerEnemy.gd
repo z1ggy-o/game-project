@@ -3,7 +3,7 @@ extends KinematicBody
 var active = true
 var move_vec = Vector3()
 
-var MOVE_SPEED = 5
+var MOVE_SPEED = 2
 var target
 
 # MOVEMENT SPEED
@@ -19,18 +19,19 @@ var dir = Vector3()
 const MAX_SLOPE_ANGLE = 40
 
 # enemy status
+var MAX_HEALTH = 100
 var HEALTH = 100
-var FIRST_DELAY = 1.1
-var ATTACK_SPEED = 0.3
+var DAMAGE = 20
+var SOUL = 10
 
 # flags
 var attack_flag = false
 var walk_flag = false
 var sprint_flag = false
+var is_shoot = false
+var dead = false
 
 onready var animation_manager = $Graphics/AnimationPlayer
-onready var closeAttack = $area_closeAttack/CollisionShape
-onready var timer_firstDelay = $timer_firstDelay
 
 var y_velo = 0
 var t = 0
@@ -50,13 +51,13 @@ func _ready():
 	vel = Vector3()
 	dir = Vector3()
 	
+	add_to_group("Enemy")
 	
-	closeAttack.disabled = true
-	timer_firstDelay.wait_time = FIRST_DELAY
-	
+	get_node("BulletSpawn").set_damage(DAMAGE)
+		
 	
 func _physics_process(delta):
-	if active:
+	if !dead:
 		
 		
 		#global_transform = global_transform.looking_at(target.global_transform.origin, Vector3(0,1,0))
@@ -67,9 +68,11 @@ func _physics_process(delta):
 		move_with_navigate(target.get_translation())
 		
 		var anim = ai()
-		movement_loop()
-		process_animation(delta, anim)
-		aim()
+		process_animation(delta, animations["Attack"])
+		if $stoptime.is_stopped():
+			movement_loop()
+			aim()
+		get_node("BulletSpawn").fire(global_transform.basis.z)
 		#process_movement(delta)
 		pass
 		
@@ -88,6 +91,8 @@ func movement_loop():
 	
 	var motion = dir.normalized() * MOVE_SPEED
 	motion.y = y_velo
+	motion.x = -motion.x
+	motion.z = -motion.z
 	
 	y_velo += GRAVITY
 	
@@ -95,30 +100,6 @@ func movement_loop():
 		y_velo = -0.1
 	
 	motion = move_and_slide(motion, Vector3(0, 1, 0))
-	
-func process_movement(delta):
-	dir.y = 0
-	dir = dir.normalized()
-
-	vel.y += 0
-
-	var hvel = vel
-	hvel.y = 0
-
-	var dirm = dir
-	
-	dirm *= MOVE_SPEED
-
-	var accel
-	if dir.dot(hvel) > 0:
-		accel = ACCEL
-	else:
-		accel = DEACCEL
-
-	hvel = hvel.linear_interpolate(dirm, accel*delta)
-	vel.x = hvel.x
-	vel.z = hvel.z
-	vel = move_and_slide(vel)
 	
 func aim():
 	var rayPos = target.global_transform.origin
@@ -164,18 +145,40 @@ func process_animation(delta, anim):
 	
 
 # ---------- basic status change ----------#
-
 func take_damage(amount):
+	set_health(HEALTH - amount)
+
+
+func kill():
+	play_anim("Death")
+	dead = true
+	abilup()
+	get_node("/root/Globals").updateSoul(SOUL)
+	pass
 	
-	HEALTH = HEALTH - amount
+
+func abilup():
+	var rn = randi() % 100
+	if rn > 0:
+		get_node("/root/Globals").ABIL_SHOOT += 3
+
+func set_health(value):
+	var prev_health = HEALTH
+	HEALTH = clamp(value, 0 , MAX_HEALTH)
+	if HEALTH != prev_health:
+		#emit_signal("health_updated", HEALTH)
+		if HEALTH <= 0:
+			kill()
 
 # ---------- basic status change end ----------#
 
 # ---------- basic ai ---------- #
 func ai():
+	if !is_shoot:
+		return animations["Attack"]
 	if attack_flag:
 		dir = Vector3(0,0,0)
-		#return animations["Attack"]
+		return animations["Attack"]
 	
 	elif walk_flag:
 		return animations["Walk"]
@@ -183,17 +186,12 @@ func ai():
 		
 	return null
 
-func firstDelayFinished(afaf):
-	closeAttack.disabled = false
-
-func attackFinished():
-	closeAttack.disabled = true
 	
-func set_attack_speed():
-	$timer_closeAttack.wait_time = ATTACK_SPEED
 
-func _on_area_closeDetect_body_entered(body):
-	attack_flag = true
+func _on_AnimationPlayer_animation_finished(anim_name):
+	is_shoot = false
+
+
+func _on_CooldownTimer_timeout():
+	$shoot.start()
 	pass # Replace with function body.
-	
-

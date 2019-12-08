@@ -19,14 +19,18 @@ var dir = Vector3()
 const MAX_SLOPE_ANGLE = 40
 
 # enemy status
+var MAX_HEALTH = 100
 var HEALTH = 100
-var FIRST_DELAY = 1.1
-var ATTACK_SPEED = 0.3
+var DAMAGE = 20
+var ATTACK_SPEED = 2.67 + 0.3
 
 # flags
 var attack_flag = false
+var attack_finish_flag = false
 var walk_flag = false
 var sprint_flag = false
+var aim_flag = 0
+var dead = false
 
 onready var animation_manager = $Graphics/AnimationPlayer
 onready var closeAttack = $area_closeAttack/CollisionShape
@@ -36,7 +40,7 @@ var y_velo = 0
 var t = 0
 
 var animations = {
-	"Attack": "Attack-loop",
+	"Attack": "Attack",
 	"Death": "Death",
 	"Hit": "Hit",
 	"Idle": "Idle-loop",
@@ -52,11 +56,11 @@ func _ready():
 	
 	
 	closeAttack.disabled = true
-	timer_firstDelay.wait_time = FIRST_DELAY
-	
+	set_attack_speed()
+	add_to_group("Enemy")
 	
 func _physics_process(delta):
-	if active:
+	if !dead:
 		
 		
 		#global_transform = global_transform.looking_at(target.global_transform.origin, Vector3(0,1,0))
@@ -121,6 +125,9 @@ func process_movement(delta):
 	vel = move_and_slide(vel)
 	
 func aim():
+	if aim_flag > 60:
+		return
+		
 	var rayPos = target.global_transform.origin
 	rayPos.y = global_transform.origin.y
 	var desired_rotation = global_transform.looking_at(rayPos, Vector3(0,1,0))
@@ -166,14 +173,33 @@ func process_animation(delta, anim):
 # ---------- basic status change ----------#
 
 func take_damage(amount):
+	set_health(HEALTH - amount)
+	print(HEALTH)
+
+
+func kill():
+	play_anim("Death")
+	dead = true
+	pass
 	
-	HEALTH = HEALTH - amount
+func set_health(value):
+	var prev_health = HEALTH
+	HEALTH = clamp(value, 0 , MAX_HEALTH)
+	if HEALTH != prev_health:
+		#emit_signal("health_updated", HEALTH)
+		if HEALTH <= 0:
+			kill()
 
 # ---------- basic status change end ----------#
 
 # ---------- basic ai ---------- #
 func ai():
 	if attack_flag:
+		aim_flag += 1
+		if attack_finish_flag:
+			aim_flag = 0
+			attack_finish_flag = false
+			return animations["Idle"]
 		dir = Vector3(0,0,0)
 		#return animations["Attack"]
 	
@@ -182,18 +208,29 @@ func ai():
 		
 		
 	return null
-
-func firstDelayFinished(afaf):
-	closeAttack.disabled = false
-
-func attackFinished():
-	closeAttack.disabled = true
 	
 func set_attack_speed():
 	$timer_closeAttack.wait_time = ATTACK_SPEED
 
 func _on_area_closeDetect_body_entered(body):
 	attack_flag = true
-	pass # Replace with function body.
 	
+func _on_area_closeDetect_body_exited(body):
+	attack_flag = false
+	walk_flag = true
+	aim_flag = 0
+	pass # Replace with function body.
 
+
+
+func _on_timer_firstDelay_timeout():
+	if !dead:
+		closeAttack.disabled = false
+	$timer_firstDelay.stop()
+
+func _on_timer_attackFinish_timeout():
+	closeAttack.disabled = true
+	$timer_attackFinish.stop()
+
+func _on_timer_closeAttack_timeout():
+	attack_finish_flag = true

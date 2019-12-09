@@ -9,7 +9,7 @@
 [ext_resource path="res://UI/HealthBar3D.tscn" type="PackedScene" id=7]
 
 [sub_resource type="CylinderShape" id=1]
-radius = 0.276932
+radius = 0.782304
 height = 1.58652
 
 [node name="Enemy" type="KinematicBody"]

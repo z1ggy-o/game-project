@@ -7,11 +7,11 @@
 [ext_resource path="res://UI/HealthBar3D.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CylinderShape" id=1]
-radius = 0.502514
+radius = 0.8
 height = 1.58652
 
 [sub_resource type="CylinderShape" id=2]
-radius = 3.04099
+radius = 2.11532
 height = 2.30829
 
 [sub_resource type="BoxShape" id=3]

@@ -28,8 +28,6 @@ func _ready():
 	set_animation("Idle-loop")
 	get_animation("Walk-loop").set_loop(true)
 	connect("animation_finished", self, "animation_ended")
-	$timer_firstDelay.set_wait_time(1.27)
-	$timer_attackFinish.set_wait_time(2.33)
 	#attack.
 	
 func set_animation(animation_name):

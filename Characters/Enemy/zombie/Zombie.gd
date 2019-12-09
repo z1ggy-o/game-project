@@ -194,12 +194,13 @@ func kill():
 	dead = true
 	$HealthBar3D.visible = false
 	abilup()
+	get_node("/root/Globals").NUM_DEAD += 1
 	get_node("/root/Globals").updateSoul(SOUL)
 	pass
 	
 func abilup():
 	var rn = randi() % 100
-	if rn > 0:
+	if rn < 30:
 		var se = randi() % 2
 		if se == 0:
 			get_node("/root/Globals").ABIL_HP += 2

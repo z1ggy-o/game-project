@@ -39,8 +39,8 @@ onready var invulnerability_timer = $InvulnerableTimer
 
 # STATUS
 var MIN_HEALTH = 100
-var DAMAGE = 10
-var MIN_DAMAGE = 50 #zgy
+var DAMAGE = 30
+var MIN_DAMAGE = 30
 var MAX_HEALTH = 100
 onready var HEALTH = 100 setget set_health
 var SHOOT = 0

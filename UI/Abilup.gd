@@ -20,7 +20,7 @@ func get_text(abil):
 	if abil == "MAX_HEALTH":
 		text = "MAX HEALTH UP"
 	if abil == "SHOOT":
-		text == "SHOOTING UP"
+		text = "SHOOTING UP"
 	
 	update()
 

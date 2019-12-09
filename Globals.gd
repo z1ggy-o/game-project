@@ -87,6 +87,8 @@ func reset_abil():
 	ABIL_HP = 0
 	ABIL_SHOOT = 0
 	HEALTH_UP = 0
+	
+var NUM_DEAD = 0
 
 func read_power():
 	var file = File.new()

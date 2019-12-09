@@ -8,7 +8,7 @@ points = PoolVector3Array( -3, 5.05289, 0.5, -2, 5.05289, 0.5, -2, 6, 0.5, -3, 6
 
 [sub_resource type="BoxShape" id=2]
 
-[node name="Portal" instance=ExtResource( 1 )]
+[node name="Portal" index="0" instance=ExtResource( 1 )]
 transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
 script = ExtResource( 2 )
 

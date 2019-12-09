@@ -11,6 +11,7 @@ func _ready():
 	start_menu = $Start_Menu
 	options_menu = $Options_Menu
 
+	
 	$Start_Menu/Button_Start.connect("pressed", self, "start_menu_button_pressed", ["start"])
 	$Start_Menu/Button_Options.connect("pressed", self, "start_menu_button_pressed", ["options"])
 	$Start_Menu/Button_Quit.connect("pressed", self, "start_menu_button_pressed", ["quit"])
@@ -26,6 +27,10 @@ func _ready():
 	
 	# zgy: play music
 	globals.play_sound("menu", true)
+	
+	get_node("/root/Globals").ABIL_HP = 0
+	get_node("/root/Globals").ABIL_POWER = 0
+	get_node("/root/Globals").ABIL_SHOOT = 0
 
 func start_menu_button_pressed(button_name):
 	if button_name == "start":
@@ -33,6 +38,8 @@ func start_menu_button_pressed(button_name):
 		# Load scene
 		set_mouse_and_joypad_sensitivity()
 		get_node("/root/Globals").load_new_scene(testing_area_scene)
+		get_node("/root/Globals").play_sound("battle")
+		get_node("/root/Globals").CURRENT_LEVEL = 1
 	elif button_name == "powers":
 		get_tree().change_scene(POWER_UP_PATH)
 	elif button_name == "options":

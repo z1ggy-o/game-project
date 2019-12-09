@@ -1,6 +1,7 @@
 [gd_scene format=2]
 
 [node name="Skill_Popup" type="ConfirmationDialog"]
+visible = true
 margin_right = 206.0
 margin_bottom = 94.0
 rect_clip_content = true

@@ -8,7 +8,7 @@ export (int, "full size", "small") var kit_size = 0 setget kit_size_change
 const HEALTH_AMOUNTS = [70, 30]
 
 # The length of time (in seconds) it will take for the pickup to respawn
-const RESPAWN_TIME = 3 # zgy
+const RESPAWN_TIME = 15 # zgy
 # A variable for tracking how much respawn time has passed
 var respawn_timer = 0
 

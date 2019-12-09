@@ -12,8 +12,10 @@ margin_left = 512.0
 script = ExtResource( 1 )
 
 [node name="Health" parent="." instance=ExtResource( 2 )]
-anchor_bottom = 0.48
-margin_top = 30.0
+margin_left = -197.143
+margin_top = 13.718
+margin_right = 198.857
+margin_bottom = 66.718
 
 [node name="Soul_Counter" parent="." instance=ExtResource( 3 )]
 margin_left = -509.0
@@ -32,8 +34,10 @@ margin_right = -455.217
 margin_bottom = 514.003
 
 [node name="Skill_UHD" parent="." instance=ExtResource( 5 )]
-margin_left = 509.419
-margin_top = 2.94037
-margin_right = 509.419
-margin_bottom = 2.94037
+anchor_left = 1.0
+anchor_top = 1.0
+margin_left = 510.804
+margin_top = 1.98164
+margin_right = 510.804
+margin_bottom = 1.98164
 [connection signal="health_changed" from="." to="Health" method="_on_Interface_health_changed"]

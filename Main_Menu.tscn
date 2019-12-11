@@ -1,0 +1,175 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Main_Menu.gd" type="Script" id=1]
+[ext_resource path="res://Titillium-Regular.otf" type="DynamicFontData" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.199219, 0.199219, 0.199219, 1 )
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 0.0535583, 0.064363, 0.152344, 1 )
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="Main_Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+testing_area_scene = "res://levels/Level1.tscn"
+
+[node name="Start_Menu" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.901961 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panelf = SubResource( 1 )
+custom_styles/panel = SubResource( 1 )
+custom_styles/panelnc = SubResource( 1 )
+
+[node name="Title_Label" type="Label" parent="Start_Menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -172.0
+margin_top = 88.0
+margin_right = 72.0
+margin_bottom = 120.0
+rect_scale = Vector2( 1.4, 1.4 )
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 3
+custom_constants/shadow_offset_y = 3
+text = "Get My Body Back"
+align = 1
+valign = 1
+
+[node name="Button_Start" type="Button" parent="Start_Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.0
+margin_top = -104.0
+margin_right = 155.0
+margin_bottom = -40.0
+custom_fonts/font = SubResource( 2 )
+text = "Start game"
+
+[node name="Button_PowerUp" type="Button" parent="Start_Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.0
+margin_top = -26.004
+margin_right = 155.0
+margin_bottom = 38.996
+custom_fonts/font = SubResource( 2 )
+text = "Power Up"
+
+[node name="Button_Options" type="Button" parent="Start_Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.0
+margin_top = 50.0
+margin_right = 155.0
+margin_bottom = 115.0
+custom_fonts/font = SubResource( 2 )
+text = "Options"
+
+[node name="Button_Quit" type="Button" parent="Start_Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.0
+margin_top = 125.0
+margin_right = 155.0
+margin_bottom = 190.0
+custom_fonts/font = SubResource( 2 )
+text = "Quit"
+
+[node name="Options_Menu" type="Panel" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.901961 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panelf = SubResource( 1 )
+custom_styles/panel = SubResource( 1 )
+custom_styles/panelnc = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options_Menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -140.0
+margin_right = 140.0
+custom_constants/separation = 25
+alignment = 1
+
+[node name="Title_Label" type="Label" parent="Options_Menu/VBoxContainer"]
+margin_top = 154.0
+margin_right = 280.0
+margin_bottom = 186.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 3
+custom_constants/shadow_offset_y = 3
+text = "Options"
+align = 1
+valign = 1
+
+[node name="Label_Mouse_Sensitivity" type="Label" parent="Options_Menu/VBoxContainer"]
+margin_top = 211.0
+margin_right = 280.0
+margin_bottom = 243.0
+custom_fonts/font = SubResource( 2 )
+text = "Mouse sensitivity"
+align = 1
+valign = 1
+
+[node name="HSlider_Mouse_Sensitivity" type="HSlider" parent="Options_Menu/VBoxContainer"]
+margin_top = 268.0
+margin_right = 280.0
+margin_bottom = 284.0
+min_value = 0.001
+max_value = 0.4
+step = 0.004
+value = 0.012
+ticks_on_borders = true
+
+[node name="Label_Joypad_Sensitivity" type="Label" parent="Options_Menu/VBoxContainer"]
+margin_top = 309.0
+margin_right = 280.0
+margin_bottom = 341.0
+custom_fonts/font = SubResource( 2 )
+text = "Joypad sensitivity"
+align = 1
+valign = 1
+
+[node name="HSlider_Joypad_Sensitivity" type="HSlider" parent="Options_Menu/VBoxContainer"]
+margin_top = 366.0
+margin_right = 280.0
+margin_bottom = 382.0
+min_value = 0.1
+max_value = 5.0
+step = 0.1
+value = 0.1
+ticks_on_borders = true
+
+[node name="Button_Back" type="Button" parent="Options_Menu/VBoxContainer"]
+margin_top = 407.0
+margin_right = 280.0
+margin_bottom = 445.0
+custom_fonts/font = SubResource( 2 )
+text = "Back"

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/sound_battle.wav-b2d46907d99e83b892e71dfe82874ff9.sample"
+
+[deps]
+
+source_file="res://sounds/sound_battle.wav"
+dest_files=[ "res://.import/sound_battle.wav-b2d46907d99e83b892e71dfe82874ff9.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0
